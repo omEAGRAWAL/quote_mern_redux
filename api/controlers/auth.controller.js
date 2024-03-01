@@ -36,12 +36,12 @@ export const signin = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password || email === "" || password == "") {
-    next(errorHandler(400, "All fields are required"));
+  return   next(errorHandler(400, "All fields are required"));
   }
   try {
     const user = await User.findOne({ email: email });
     if (!user) {
-      next(errorHandler(404, "user not found"));
+     return next(errorHandler(404, "user not found"));
     }
     const isMatch = bcryptjs.compareSync(password, user.password);
     if (!isMatch) {
@@ -56,10 +56,11 @@ export const signin = async (req, res, next) => {
       },
       process.env.JWT_SECRET
     );
-    const { password:pass, ...rest } = user._doc;
+    const { password:pass, ...rest } = user._doc;//removing password from the user object
     res
       .status(200)
       .cookie('access_toke',token, {
+        // sendin cookie with the token
         httpOnly: true,
       })
       .json(rest);

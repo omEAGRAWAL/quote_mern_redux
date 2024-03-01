@@ -1,8 +1,8 @@
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Label, TextInput, Button, Alert, Spinner } from "flowbite-react";
 import { useState } from "react";
 export default function SignUp() {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [formdata, setformdata] = useState({});
   const [errorMessage, seterrorMessage] = useState(null);
   const [loading, setloading] = useState(false);
@@ -29,8 +29,8 @@ export default function SignUp() {
         return seterrorMessage(data.message);
       }
       setloading(false);
-      if(res.ok){
-        navigate('/sign-in')
+      if (res.ok) {
+        navigate("/sign-in");
       }
     } catch (e) {
       console.log(e);
@@ -55,7 +55,7 @@ export default function SignUp() {
           </p>
         </div>
 
-        <div className=" flex-1 " >
+        <div className=" flex-1 ">
           {/*right side*/}
           <form className="flex flex-col gap-4 " onSubmit={handleSubmit}>
             <div className="" onChange={eventHandler}>
@@ -67,7 +67,7 @@ export default function SignUp() {
               <TextInput type="email" placeholder="xyz@abc.com" id="email" />
             </div>
             <div className="" onChange={eventHandler}>
-              <Label value="your password"  />
+              <Label value="your password" />
               <TextInput type="password" placeholder="password" id="password" />
             </div>
             <Button
