@@ -32,8 +32,8 @@ function Header() {
         <Button className=" w-12 h-10 hidden lg:inline " color="gray" pill>
           <FaMoon />
         </Button>
-        <Link to="/sign-in">
-          <Button gradientDuoTone="purpleToBlue">Sign-In</Button>
+        <Link to="/sign-up">
+          <Button gradientDuoTone="purpleToBlue">Sign-up</Button>
         </Link>
 
         <Navbar.Toggle />
