@@ -55,7 +55,7 @@ export default function SignUp() {
           </p>
         </div>
 
-        <div className=" flex-1">
+        <div className=" flex-1 " >
           {/*right side*/}
           <form className="flex flex-col gap-4 " onSubmit={handleSubmit}>
             <div className="" onChange={eventHandler}>
@@ -67,7 +67,7 @@ export default function SignUp() {
               <TextInput type="email" placeholder="xyz@abc.com" id="email" />
             </div>
             <div className="" onChange={eventHandler}>
-              <Label value="your password" />
+              <Label value="your password"  />
               <TextInput type="password" placeholder="password" id="password" />
             </div>
             <Button

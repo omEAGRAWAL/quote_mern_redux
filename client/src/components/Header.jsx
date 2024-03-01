@@ -16,7 +16,7 @@ function Header() {
         Gram
       </Link>
 
-      <form >
+      <form>
         <TextInput
           type="text"
           placeholder="Search"
