@@ -1,6 +1,9 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
-import {errorHandler} from "../utils/error.js";  //importing the error handler function from the error.js file
+import { errorHandler } from "../utils/error.js";
+import jwt from "jsonwebtoken";
+
+//importing the error handler function from the error.js file
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
   if (
@@ -24,6 +27,42 @@ export const signup = async (req, res, next) => {
   try {
     const user = await newUser.save();
     res.json("signup sucessfullll");
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const signin = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password || email === "" || password == "") {
+    next(errorHandler(400, "All fields are required"));
+  }
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      next(errorHandler(404, "user not found"));
+    }
+    const isMatch = bcryptjs.compareSync(password, user.password);
+    if (!isMatch) {
+      return next(errorHandler(401, "invalid credentials"));
+    }
+
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        username: user.username,
+        email: user.email,
+      },
+      process.env.JWT_SECRET
+    );
+    const { password:pass, ...rest } = user._doc;
+    res
+      .status(200)
+      .cookie('access_toke',token, {
+        httpOnly: true,
+      })
+      .json(rest);
   } catch (err) {
     next(err);
   }

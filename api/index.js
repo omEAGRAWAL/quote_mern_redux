@@ -4,6 +4,7 @@ import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.routes.js";
 import dotenv from "dotenv";
 
+
 dotenv.config();
 
 mongoose
@@ -22,6 +23,7 @@ app.listen(3000, () => {
 
 app.use("/api/test", userRoute);
 app.use("/api/auth", authRoute);
+
 
 app.use((err,req,res,next)=>{
   const statuscode = res.statusCode || 500 ;
