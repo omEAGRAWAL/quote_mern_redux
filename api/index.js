@@ -25,6 +25,7 @@ app.use("/api/test", userRoute);
 app.use("/api/auth", authRoute);
 
 
+
 app.use((err,req,res,next)=>{
   const statuscode = res.statusCode || 500 ;
   const message = res.message || "Internal Server Error";
