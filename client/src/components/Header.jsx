@@ -2,11 +2,13 @@ import { Navbar, TextInput, Button, Dropdown, Avatar } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { toogleTheme } from "../redux/theme/themeSlice";
 function Header() {
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   console.log(currentUser);
-  console.log("hloooooooo");
+
   const path = useLocation().pathname;
   return (
     <Navbar className="border-b-2  ">
@@ -33,10 +35,14 @@ function Header() {
       </Button>
 
       <div className=" flex gap-2 md:order-2">
-        <Button className=" w-12 h-10 hidden lg:inline " color="gray" pill>
+        <Button
+          className=" w-12 h-10 hidden sm:inline "
+          color="gray"
+          pill
+          onClick={() => dispatch(toogleTheme())}
+        >
           <FaMoon />
         </Button>
-        console.log(currentUser);
         {currentUser ? (
           <Dropdown
             arrowIcon={false}

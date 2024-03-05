@@ -1,8 +1,8 @@
 import express from "express";
-import { test } from "../controlers/user.controlers.js";
+import { signout } from "../controlers/user.controlers.js";
 
 const router = express.Router();
 
-router.post("/", test);
+router.post("/signout",signout)
 
 export default router;
