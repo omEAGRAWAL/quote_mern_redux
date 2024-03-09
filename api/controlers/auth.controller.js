@@ -10,7 +10,7 @@ export const signup = async (req, res, next) => {
     !username ||
     !email ||
     !password ||
-    usernamse === "" ||
+    username === "" ||
     email == "" ||
     password == ""
   ) {
@@ -60,7 +60,7 @@ export const signin = async (req, res, next) => {
     const { password: pass, ...rest } = user._doc; //removing password from the user object
     res
       .status(200)
-      .cookie("access_toke", token, {
+      .cookie("access_token", token, {
         // sendin cookie with the token
         httpOnly: true,
       })
@@ -113,5 +113,3 @@ export const google = async (req, res, next) => {
     next(err);
   }
 };
-
-

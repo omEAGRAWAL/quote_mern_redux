@@ -1,7 +1,6 @@
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import User from "../models/user.model.js";
-import {clearCookie} from "../models/cookie.model.js";
 export const signout = async (req, res, next) => {
   try {
     res

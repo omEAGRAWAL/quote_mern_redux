@@ -1,49 +1,31 @@
-import { Sidebar } from "flowbite-react";
-import { HiUser } from "react-icons/hi";
-import { CiLogout } from "react-icons/ci";
-import { signOutSuccess } from "../redux/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import DashSidebar from "../components/DashSidebar";
+import DashProfile from "../components/DashProfile";
 function DashBoard() {
-  const dispatch = useDispatch();
+  const location = useLocation();
+  const [tab, setTab] = useState("");
 
-  const handleSignout = async () => {
-    try {
-      const res = await fetch("/api/user/signout", {
-        method: "POST",
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        console.log(data.message);
-      } else {
-        dispatch(signOutSuccess());
-      }
-    } catch (error) {
-      console.log(error.message);
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const tabFromUrl = urlParams.get("tab");
+    if (tabFromUrl) {
+      setTab(tabFromUrl);
     }
-  };
-
-  //write code to clear redux sttore and sign out from user account
-
+    setTab(tabFromUrl);
+    console.log(tabFromUrl);
+  }, [location.search]);
   return (
-    <div>
-      <div>
+    <div className="min-h-screen flex flex-col md:flex-row">
+      <div className=" md:w-56 ">
         {/*left side*/}
-
-        <Sidebar>
-          <Sidebar.Items className="min-h-screen">
-            <Sidebar.ItemGroup>
-              <Sidebar.Item href="" icon={CiLogout} onClick={handleSignout}>
-                SignOut
-              </Sidebar.Item>
-              <Sidebar.Item href="/dashboard/?tab=profile" icon={HiUser}>
-                Profile
-              </Sidebar.Item>
-            </Sidebar.ItemGroup>
-          </Sidebar.Items>
-        </Sidebar>
+        <DashSidebar />
       </div>
 
-      <div className="">{/*right side*/}</div>
+      <div className="">
+        {/*right side*/}
+        {tab === "profile" && <DashProfile />}
+      </div>
     </div>
   );
 }
