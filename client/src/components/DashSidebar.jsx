@@ -4,7 +4,7 @@ import { CiLogout } from "react-icons/ci";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { signOutSuccess } from "../redux/user/userSlice";
+import { signOutSuccess, signOutStart } from "../redux/user/userSlice";
 function DashSidebar() {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -21,15 +21,18 @@ function DashSidebar() {
 
   const handleSignout = async () => {
     try {
+      console.log("signing out");
+      dispatch(signOutStart());
       const res = await fetch("/api/user/signout", {
         method: "POST",
       });
-      localStorage.Clear();
       const data = await res.json();
+
       if (!res.ok) {
         console.log(data.message);
       } else {
-        dispatch(signOutSuccess(data));
+        console.log(data.message);
+        dispatch(signOutSuccess());
       }
     } catch (error) {
       console.log(error.message);

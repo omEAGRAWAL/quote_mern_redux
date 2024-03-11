@@ -42,7 +42,7 @@ export default function SignIn() {
         dispatch(signInFailure(data.message));
       }
 
-      if (data) {
+      else {
         dispatch(signInSuccess(data));
         navigate("/");
       }

@@ -14,7 +14,6 @@ const persistConfig = {
   key: "root",
   storage,
   version: 1,
-  rehydrated: false,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

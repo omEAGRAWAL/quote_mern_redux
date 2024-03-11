@@ -22,10 +22,8 @@ function DashBoard() {
         <DashSidebar />
       </div>
 
-      <div className="">
-        {/*right side*/}
-        {tab === "profile" && <DashProfile />}
-      </div>
+      {/*right side*/}
+      {tab === "profile" && <DashProfile />}
     </div>
   );
 }
