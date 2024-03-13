@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.routes.js";
+import postRoute from "./routes/post.router.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
@@ -24,6 +25,7 @@ app.listen(3000, () => {
 
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/post", postRoute);
 
 app.use((err, req, res, next) => {
   const statuscode = res.statusCode || 500;

@@ -1,8 +1,6 @@
-
+import HomePost from "../components/HomePost";
 function Home() {
-  return (
-    <div>Home</div>
-  )
+  return <HomePost />;
 }
 
-export default Home
+export default Home;
