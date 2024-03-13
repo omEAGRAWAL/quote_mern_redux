@@ -79,6 +79,7 @@ export default function HomePost() {
                 <FaHeart color="gray" />
               )}
             </button>
+            <p>{post.likes.length} likes</p>
           </Card>
         );
       })}
