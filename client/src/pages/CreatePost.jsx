@@ -1,8 +1,10 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 export default function CreatePost() {
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   const [contentForm, setContentForm] = useState({
     userId: currentUser._id,
@@ -20,6 +22,7 @@ export default function CreatePost() {
       });
       const data = await res.json();
       console.log(data);
+      navigate("/");
     } catch (e) {
       console.log(e);
     }
@@ -33,9 +36,8 @@ export default function CreatePost() {
           {/* TextInput placeholder="Title" /> */}
         </div>
         <ReactQuill
-          theme="snow"
           placeholder="Write something..."
-          className="h-72 mb-12"
+          className="h-72 mb-12 bg-white dark:bg-gray-500 text-gray-900 dark:text-white"
           required
           onChange={(value) => {
             setContentForm({ ...contentForm, content: value });

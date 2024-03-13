@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { Card } from "flowbite-react";
 import { useSelector } from "react-redux";
+import { FaHeart } from "react-icons/fa";
+
 export default function HomePost() {
   const { currentUser } = useSelector((state) => state.user);
   const [post, setpost] = useState([]);
+  const [likestate, setlikestate] = useState(false);
 
   useEffect(() => {
     const getpost = async () => {
@@ -26,8 +29,26 @@ export default function HomePost() {
         console.log(err);
       }
     };
+
     getpost();
-  }, []);
+  }, [currentUser, likestate]);
+
+  const like = async (postId) => {
+    try {
+      const response = await fetch("/api/post/like", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ postId, userId: currentUser._id }),
+      });
+      const data = await response.json();
+      setlikestate(!likestate);
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -51,6 +72,13 @@ export default function HomePost() {
               className="p-3 max-w-2xl mx-auto w-full post-content"
               dangerouslySetInnerHTML={{ __html: post && post.content }}
             ></div>
+            <button onClick={() => like(post.postId)}>
+              {post.likes.includes(currentUser._id) ? (
+                <FaHeart color="red" />
+              ) : (
+                <FaHeart color="white" />
+              )}
+            </button>
           </Card>
         );
       })}

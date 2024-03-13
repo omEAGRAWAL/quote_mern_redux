@@ -6,6 +6,12 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    postId:{
+      type:String,
+      required:true
+    },
+
+
     profilePicture: {
       type: String,
       default:
@@ -16,8 +22,8 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     likes: {
-      type: Number,
-      default: 0,
+      type: Array,
+      default: [],
     },
   },
   { timestamps: true }
