@@ -76,7 +76,7 @@ export default function HomePost() {
               {post.likes.includes(currentUser._id) ? (
                 <FaHeart color="red" />
               ) : (
-                <FaHeart color="white" />
+                <FaHeart color="gray" />
               )}
             </button>
           </Card>
