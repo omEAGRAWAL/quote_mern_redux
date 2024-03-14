@@ -8,6 +8,7 @@ export default function CreatePost() {
   const { currentUser } = useSelector((state) => state.user);
   const [contentForm, setContentForm] = useState({
     userId: currentUser._id,
+    username: currentUser.username,
     profilePicture: currentUser.profilePicture,
   });
 

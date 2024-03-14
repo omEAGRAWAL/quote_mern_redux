@@ -3,7 +3,6 @@ import { Card } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { FaHeart } from "react-icons/fa";
 
-
 export default function HomePost() {
   const { currentUser } = useSelector((state) => state.user);
   const [post, setpost] = useState([]);
@@ -63,7 +62,7 @@ export default function HomePost() {
                 className="w-12 h-12 rounded-full"
               />
               <div>
-                {/* <h1 className="font-semibold">{post.username}</h1> */}
+                <h1 className="font-semibold">{post.username}</h1>
                 <p className="text-xs">
                   {new Date(post.createdAt).toLocaleDateString()}
                 </p>

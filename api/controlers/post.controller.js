@@ -5,6 +5,7 @@ export const create = async (req, res, next) => {
   const { content } = req.body;
   const postid = req.body.userId + Math.random().toString(9);
   const newPost = new Post({
+    username: req.body.username,
     content: req.body.content,
     userId: req.body.userId,
     postId: postid,
