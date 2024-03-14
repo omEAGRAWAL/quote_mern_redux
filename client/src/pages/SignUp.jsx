@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Label, TextInput, Button, Alert, Spinner } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import OAuth from "../components/OAuth.jsx";
 export default function SignUp() {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ export default function SignUp() {
     setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
     console.log(formdata);
   };
+  useEffect(() => {}, [loading]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formdata.username || !formdata.email || !formdata.password) {

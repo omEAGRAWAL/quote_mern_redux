@@ -3,9 +3,10 @@ import { HiUser } from "react-icons/hi";
 import { CiLogout } from "react-icons/ci";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { signOutSuccess, signOutStart } from "../redux/user/userSlice";
 function DashSidebar() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const [tab, setTab] = useState("");
@@ -33,6 +34,7 @@ function DashSidebar() {
       } else {
         console.log(data.message);
         dispatch(signOutSuccess());
+        navigate("/signin");
       }
     } catch (error) {
       console.log(error.message);
