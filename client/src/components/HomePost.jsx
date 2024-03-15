@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { FaHeart } from "react-icons/fa";
+import { get } from "mongoose";
 
 export default function HomePost() {
   const { currentUser } = useSelector((state) => state.user);
@@ -24,7 +25,22 @@ export default function HomePost() {
         } else {
           setpost(data);
         }
-        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
+
+      try {
+        post.forEach(async (post) => {
+          const res = await fetch(`api/user/getuser/${post.userId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const userdata = await res.json();
+          post[userdata] = userdata;
+          console.log(post);
+        });
       } catch (err) {
         console.log(err);
       }

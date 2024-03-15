@@ -2,6 +2,7 @@
 import { useSelector } from "react-redux";
 import { TextInput, Button, Alert } from "flowbite-react";
 import { useState, useEffect } from "react";
+import { useRef } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -16,10 +17,14 @@ import {
   updateFailure,
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
+import { set } from "mongoose";
 function DashProfile() {
+  const filePickerRef = useRef();
   const [imageFile, setimageFile] = useState(null);
   const [imageUrl, setimageUrl] = useState(null);
   const [uploadfail, setuploadfail] = useState(false);
+  const [uploading, setuploading] = useState(false);
+  const [uploadpercentage, setuploadpercentage] = useState();
 
   const { currentUser } = useSelector((state) => state.user);
   const [form, setForm] = useState({});
@@ -33,11 +38,11 @@ function DashProfile() {
     }
   };
   useEffect(() => {
-    uploadImage();
+    if (imageFile) uploadImage();
   }, [imageFile]);
 
   const uploadImage = async () => {
-    const storage = new getStorage(app);
+    const storage = getStorage(app);
     const filename = new Date().getTime() + imageFile.name;
     const storageRef = ref(storage, filename);
 
@@ -45,9 +50,15 @@ function DashProfile() {
     uploadTask.on(
       "stage_changed",
       (snapshot) => {
-        setuploadfail(false);
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        setuploading(true);
+        setuploadpercentage(progress.toFixed(0));
       },
       (error) => {
+        console.log(error);
+        console.log("upload failed");
         setuploadfail(true);
       },
       () => {
@@ -55,6 +66,8 @@ function DashProfile() {
           setimageUrl(downloadURL);
           setForm({ ...form, profilePicture: downloadURL });
           setuploadfail(false);
+          console.log(downloadURL);
+          setuploading(false);
         });
       }
     );
@@ -92,7 +105,13 @@ function DashProfile() {
       <h1 className="my-7 text-center fonst-semibold text-3xl">Profile</h1>
 
       <form className="flex flex-col gap-4" onSubmit={updateUser}>
-        <input type="file" accept="image/*" id="profilePicture" />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          ref={filePickerRef}
+          hidden
+        />
         <div
           className="w-32 h-32  self-center cursor-pointer shadow-md
          overflow-hidden rounded-full"
@@ -101,6 +120,7 @@ function DashProfile() {
             src={currentUser.profilePicture}
             alt="user"
             className="rounded-full  w-full h-full border-8 object-cover border-[lightgray]"
+            onClick={() => filePickerRef.current.click()}
           />
         </div>
         <TextInput
@@ -118,21 +138,43 @@ function DashProfile() {
           defaultValue={currentUser.email}
           onChange={handleChange}
         />
-        <TextInput
+        {/* <TextInput
           type="text"
           id="password"
           placeholder="password"
           onChange={handleChange}
-        />
-        <Button type="submit" gradientDuoTone="purpleToBlue">
-          Update
-        </Button>
+        /> */}
+        {uploading ? (
+          <Button type="submit" gradientDuoTone="purpleToBlue" disabled>
+            wait uploading image
+          </Button>
+        ) : (
+          <Button type="submit" gradientDuoTone="purpleToBlue">
+            Update
+          </Button>
+        )}
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span className="cursor-pointer">Delete Account</span>
         <span className="cursor-pointer">Sign Out</span>
       </div>
-      <Alert>{uploadfail ? "upload fail" : ""}</Alert>
+      {uploadfail && (
+        <Alert type="danger" className="mt-5">
+          Image upload failed
+        </Alert>
+      )}
+      {uploading && (
+        <div className="mt-5">
+          <div className="h-3 relative max-w-xl rounded-full overflow-hidden">
+            <div className="w-full h-full bg-gray-200 absolute"></div>
+            <div
+              className="h-full bg-green-500 absolute"
+              style={{ width: `${uploadpercentage}%` }}
+            ></div>
+          </div>
+          <div className="text-center mt-2">{uploadpercentage}% uploaded</div>
+        </div>
+      )}
     </div>
   );
 }
