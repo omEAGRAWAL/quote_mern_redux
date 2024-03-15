@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { TextInput, Button, Alert } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useRef } from "react";
+import { DarkThemeToggle, Flowbite } from "flowbite-react";
+
 import {
   getDownloadURL,
   getStorage,
@@ -15,6 +17,7 @@ import {
   updateStart,
   updateSuccess,
   updateFailure,
+  signOutSuccess,
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
 import { set } from "mongoose";
@@ -45,6 +48,27 @@ function DashProfile() {
     if (imageFile) uploadImage();
   }, [imageFile]);
 
+  //handle sign out
+  const handleSignout = async () => {
+    try {
+      console.log("signing out");
+
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        console.log(data.message);
+        dispatch(signOutSuccess());
+        navigate("/sign-in");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   const uploadImage = async () => {
     const storage = getStorage(app);
     const filename = new Date().getTime() + imageFile.name;
@@ -160,7 +184,9 @@ function DashProfile() {
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span className="cursor-pointer">Delete Account</span>
-        <span className="cursor-pointer">Sign Out</span>
+        <span className="cursor-pointer" onClick={handleSignout}>
+          Sign Out
+        </span>
       </div>
       {uploadfail && (
         <Alert type="danger" className="mt-5">

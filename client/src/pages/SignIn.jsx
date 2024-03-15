@@ -1,13 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Label,
-  TextInput,
-  Button,
-  Alert,
-  Spinner,
-  
-} from "flowbite-react";
-import { useState } from "react";
+import { Label, TextInput, Button, Alert, Spinner } from "flowbite-react";
+import { useState, useEffect } from "react";
 import {
   signInStart,
   signInSuccess,
@@ -18,8 +11,18 @@ import OAuth from "../components/OAuth.jsx";
 export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const {
+    currentUser,
+    loading,
+    error: errorMessage,
+  } = useSelector((state) => state.user);
   const [formdata, setformdata] = useState({});
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/");
+    }
+  }, [currentUser]);
+
   const eventHandler = (e) => {
     setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
     console.log(formdata);
@@ -40,9 +43,7 @@ export default function SignIn() {
       const data = await res.json();
       if (data.success === false) {
         dispatch(signInFailure(data.message));
-      }
-
-      else {
+      } else {
         dispatch(signInSuccess(data));
         navigate("/");
       }

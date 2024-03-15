@@ -4,12 +4,35 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { toogleTheme } from "../redux/theme/themeSlice";
+import { signOutSuccess } from "../redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
 function Header() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   console.log(currentUser);
-
+  const navigate = useNavigate();
   const path = useLocation().pathname;
+
+  const handleSignout = async () => {
+    try {
+      console.log("signing out");
+
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        console.log(data.message);
+        dispatch(signOutSuccess());
+        navigate("/sign-in");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <Navbar className="border-b-2  ">
       <Link
@@ -61,9 +84,8 @@ function Header() {
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            <Link to="">
-              <Dropdown.Item>Sign Out</Dropdown.Item>
-            </Link>
+
+            <Dropdown.Item onClick={handleSignout}>Sign Out</Dropdown.Item>
           </Dropdown>
         ) : (
           <Link to="/sign-in">
@@ -76,11 +98,11 @@ function Header() {
         <Navbar.Link active={path === "/"} as={"div"}>
           <Link to="/">Home</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/about"} as={"div"}>
-          <Link to="/about">Create Post</Link>
+        <Navbar.Link active={path === "/createPost"} as={"div"}>
+          <Link to="/createPost">Create Post</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/projects"} as={"div"}>
-          <Link to="/projects">Projects</Link>
+        <Navbar.Link active={path === "/dashboard"} as={"div"}>
+          <Link to="/dashboard">DashBoard</Link>
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
