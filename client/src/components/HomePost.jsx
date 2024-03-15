@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Card } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { FaHeart } from "react-icons/fa";
-import { get } from "mongoose";
 
 export default function HomePost() {
   const { currentUser } = useSelector((state) => state.user);

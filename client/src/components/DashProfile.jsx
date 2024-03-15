@@ -9,7 +9,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-
+import { useNavigate } from "react-router-dom";
 import { app } from "../firebase";
 import {
   updateStart,
@@ -19,6 +19,10 @@ import {
 import { useDispatch } from "react-redux";
 import { set } from "mongoose";
 function DashProfile() {
+  const navigate = useNavigate();
+
+  const { currentUser } = useSelector((state) => state.user);
+
   const filePickerRef = useRef();
   const [imageFile, setimageFile] = useState(null);
   const [imageUrl, setimageUrl] = useState(null);
@@ -26,7 +30,6 @@ function DashProfile() {
   const [uploading, setuploading] = useState(false);
   const [uploadpercentage, setuploadpercentage] = useState();
 
-  const { currentUser } = useSelector((state) => state.user);
   const [form, setForm] = useState({});
   const dispatch = useDispatch();
 
@@ -37,6 +40,7 @@ function DashProfile() {
       setimageUrl(URL.createObjectURL(file));
     }
   };
+
   useEffect(() => {
     if (imageFile) uploadImage();
   }, [imageFile]);
