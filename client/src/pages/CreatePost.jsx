@@ -8,8 +8,6 @@ export default function CreatePost() {
   const { currentUser } = useSelector((state) => state.user);
   const [contentForm, setContentForm] = useState({
     userId: currentUser._id,
-    username: currentUser.username,
-    profilePicture: currentUser.profilePicture,
   });
 
   const createPost = async (e) => {
@@ -22,8 +20,12 @@ export default function CreatePost() {
         body: JSON.stringify(contentForm),
       });
       const data = await res.json();
-      console.log(data);
-      navigate("/");
+      if (res.success) {
+        console.log(data);
+        navigate("/");
+      } else {
+        console.log(data + "error in creating post");
+      }
     } catch (e) {
       console.log(e);
     }

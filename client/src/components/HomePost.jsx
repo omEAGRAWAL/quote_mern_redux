@@ -8,44 +8,96 @@ export default function HomePost() {
   const [post, setpost] = useState([]);
   const [likestate, setlikestate] = useState(false);
 
+  // useEffect(() => {
+  //   const getpost = async () => {
+  //     try {
+  //       const response = await fetch("/api/post/getpost", {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       });
+  //       const data = await response.json();
+  //       console.log(data);
+  //       if (!response.ok) {
+  //         throw new Error(data.message);
+  //       } else {
+  //         setpost(data);
+  //       }
+
+  //       const updatedPost = await Promise.all(
+  //         post.forEach(async (post) => {
+  //           const res = await fetch(`api/user/getuser/${post.userId}`, {
+  //             method: "GET",
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //             },
+  //           });
+  //           const userData = await res.json();
+  //           if (!res.ok) {
+  //             console.log(userData.message);
+  //             throw new Error(userData.message);
+  //           }
+  //           console.log(userData);
+  //           return { ...post, userdata: userData };
+  //           // console.log(post) // Add userdata property to post object
+  //         })
+  //       );
+
+  //       setpost(updatedPost);
+  //       console.log(updatedPost);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+
+  //   getpost();
+  // }, [currentUser, likestate]);
   useEffect(() => {
-    const getpost = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("/api/post/getpost", {
+        // Fetch posts
+        const postResponse = await fetch("/api/post/getpost", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         });
-        console.log(currentUser);
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.message);
-        } else {
-          setpost(data);
+        if (!postResponse.ok) {
+          throw new Error("Failed to fetch posts");
         }
-      } catch (err) {
-        console.log(err);
-      }
+        const postData = await postResponse.json();
+        setpost(postData);
 
-      try {
-        post.forEach(async (post) => {
-          const res = await fetch(`api/user/getuser/${post.userId}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const userdata = await res.json();
-          post[userdata] = userdata;
-          console.log(post);
-        });
-      } catch (err) {
-        console.log(err);
+        // Fetch user data for each post
+        // const updatedPosts = await Promise.all(
+        //   postData.map(async (post) => {
+        //     const userResponse = await fetch(
+        //       `/api/user/getuser/${post.userId}`,
+        //       {
+        //         method: "GET",
+        //         headers: {
+        //           "Content-Type": "application/json",
+        //         },
+        //       }
+        //     );
+        //     if (!userResponse.ok) {
+        //       throw new Error(
+        //         `Failed to fetch user data for post with ID: ${post._id}`
+        //       );
+        //     }
+        //     const userData = await userResponse.json();
+        //     return { ...post, userdata: userData }; // Add userdata property to post object
+        //   })
+        // );
+        // setpost(updatedPosts);
+        // console.log(updatedPosts);
+      } catch (error) {
+        console.error("Error:", error);
       }
     };
 
-    getpost();
+    fetchData();
   }, [currentUser, likestate]);
 
   const like = async (postId) => {
@@ -69,15 +121,16 @@ export default function HomePost() {
     <div className="flex flex-col justify-center items-center">
       {post.map((post) => {
         return (
-          <Card key={post._id} className="my-4  w-3/5 ">
+          <Card key={post._id} className="my-3  sm:my-4  w-4/5 sm:w-3/5  ">
             <div className="flex items-center gap-2">
               <img
-                src={post.profilePicture}
+                src={post.userdata.profilePicture}
                 alt="user"
                 className="w-12 h-12 rounded-full"
               />
               <div>
-                <h1 className="font-semibold">{post.username}</h1>
+                <h1 className="font-semibold">{post.userdata.username}</h1>
+
                 <p className="text-xs">
                   {new Date(post.createdAt).toLocaleDateString()}
                 </p>
