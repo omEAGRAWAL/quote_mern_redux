@@ -3,7 +3,6 @@ import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 
 export const create = async (req, res, next) => {
-  const { content } = req.body;
   const postid = req.body.userId + Math.random().toString(9);
   const newPost = new Post({
     content: req.body.content,
@@ -11,8 +10,10 @@ export const create = async (req, res, next) => {
     postId: postid,
   });
   try {
+    console.log("creating post");
     const post = await newPost.save();
-    res.status(201).json(post);
+    console.log("post created");
+    res.status(200).json(post);
     console.log(post);
   } catch (err) {
     next(err);
@@ -74,36 +75,41 @@ export const like = async (req, res, next) => {
 export const getComments = async (req, res, next) => {
   console.log("getting comments");
 
-  // console.log(req.body);
-  //   const { postId } = req.body.id;
-  // console.log(postId);
-  //   try {
-  //     const post = await Post.findOne({ postId }).sort({ createdAt: -1 });
-  //     if (!post) {
-  //       console.log(post);
-  //       return next(errorHandler(404, "Post not found"));
-  //     }
-  //     // Retrieve comments directly from the post object
-  //     const { comments } = post;
+  console.log(req.body);
+  const { postId } = req.body.postId;
+  console.log(postId);
+  try {
+    const post = await Post.findOne({ postId }).sort({ createdAt: -1 });
+    if (!post) {
+      return next(errorHandler(404, "Post not found"));
+    }
+    console.log(post);
+    console.log("post fetched");
+    // Retrieve comments directly from the post object
 
-  //     // Fetch user details for each comment
-  //     const updatedComments = await Promise.all(comments.map(async (comment) => {
-  //       const user = await User.findById(comment.userId);
-  //       return {
-  //         ...comment.toObject(),
-  //         userdata: {
-  //           _id: user._id,
-  //           username: user.username,
-  //           profilePicture: user.profilePicture,
-  //         },
-  //       };
-  //     }));
+    const { comments } = post;
+    console.log(comments);
 
-  //     // Respond with the updated comments
-  //     res.status(200).json(updatedComments);
-  //   } catch (err) {
-  //     next(err);
-  //   }
+    // Fetch user details for each comment
+    const updatedComments = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await User.findById(comment.userId);
+        return {
+          ...comment.toObject(),
+          userdata: {
+            _id: user._id,
+            username: user.username,
+            profilePicture: user.profilePicture,
+          },
+        };
+      })
+    );
+    console.log("updated comments");
+    // Respond with the updated comments
+    res.status(200).json(updatedComments);
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const doComment = async (req, res, next) => {
@@ -112,6 +118,7 @@ export const doComment = async (req, res, next) => {
     userId,
     content,
   };
+  console.log(comments);
   try {
     const post = await Post.findOne({ postId });
     if (!post) {
@@ -134,9 +141,9 @@ export const doComment = async (req, res, next) => {
 //     if (!post) {
 //       next(errorHandler(404, "Post not found"));
 //     }
-    
-    // const updatedPost = await post.save();
-    // console.log(updatedPost);
+
+// const updatedPost = await post.save();
+// console.log(updatedPost);
 //     res.status(201).json(post);
 //   } catch (err) {
 //     next(err);

@@ -19,12 +19,14 @@ export default function CreatePost() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(contentForm),
       });
-      const data = await res.json();
-      if (res.success) {
+
+      if (!res.ok) {
+        return console.log("error in creating post");
+      } else {
+        const data = await res.json();
+        console.log(data);
         console.log(data);
         navigate("/");
-      } else {
-        console.log(data + "error in creating post");
       }
     } catch (e) {
       console.log(e);
